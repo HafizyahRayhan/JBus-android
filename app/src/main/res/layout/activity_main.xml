@@ -28,13 +28,9 @@
         android:textStyle="bold" />
 
     <ListView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/listView"
+        android:id="@+id/list_item"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
-    </ListView>
+        android:layout_height="400dp"/>
 
   </LinearLayout>
   <LinearLayout
@@ -47,30 +43,36 @@
       android:paddingHorizontal="21dp">
     <Button
         android:id="@+id/prev_page"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="49dp"
+        android:layout_height="50dp"
+        android:layout_weight="49"
         android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-        android:minHeight="0dp" />
-    <HorizontalScrollView
-        android:id="@+id/page_number_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="25"
-        android:paddingHorizontal="18dp">
+        android:text="Bus"/>
+
     <LinearLayout
         android:id="@+id/btn_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"/>
-  </HorizontalScrollView>
+        android:orientation="horizontal">
+
+      <HorizontalScrollView
+          android:id="@+id/page_number_scroll"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight="25"
+          android:paddingHorizontal="18dp"
+          tools:ignore="SpeakableTextPresentCheck" />
+    </LinearLayout>
+  </LinearLayout>
+
   <Button
       android:id="@+id/next_page"
       android:layout_width="56dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:drawableLeft="@drawable/baseline_arrow_forward_ios_24"
-      android:minHeight="0dp" />
+      android:minHeight="0dp"
+      android:text="Bus" />
 </LinearLayout>
 
-</LinearLayout>
+
