@@ -10,10 +10,11 @@ import androidx.annotation.NonNull;
 import com.HafizyahRayhanZulikhramJBusBR.jbus_android.R;
 import com.HafizyahRayhanZulikhramJBusBR.jbus_android.model.Bus;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BusArrayAdapter extends ArrayAdapter<Bus> {
 
-    public BusArrayAdapter(@NonNull Context context, ArrayList<Bus> busList) {
+    public BusArrayAdapter(@NonNull Context context, List<Bus> busList) {
         super(context, 0, busList);
     }
 

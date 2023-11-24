@@ -41,13 +41,6 @@
       android:gravity="center"
       android:orientation="horizontal"
       android:paddingHorizontal="21dp">
-    <Button
-        android:id="@+id/prev_page"
-        android:layout_width="49dp"
-        android:layout_height="50dp"
-        android:layout_weight="49"
-        android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-        android:text="Bus"/>
 
     <LinearLayout
         android:id="@+id/btn_layout"
@@ -61,7 +54,16 @@
           android:layout_height="match_parent"
           android:layout_weight="25"
           android:paddingHorizontal="18dp"
-          tools:ignore="SpeakableTextPresentCheck" />
+          tools:ignore="SpeakableTextPresentCheck">
+
+        <Button
+            android:id="@+id/prev_page"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="49"
+            android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
+            android:text="Bus" />
+      </HorizontalScrollView>
     </LinearLayout>
   </LinearLayout>
 

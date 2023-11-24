@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button[] btns;
     private int currentPage = 0;
-    private int pageSize = 12; // kalian dapat bereksperimen dengan field ini
+    private int pageSize = 12;
     private int listSize;
     private int noOfPages;
     private List<Bus> listBus = new ArrayList<>();
@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listBus = Bus.sampleBusList(20);
+        listSize = listBus.size();
+
+        BusArrayAdapter adapter = new BusArrayAdapter(this, listBus);
+        ListView busListView = findViewById(R.id.list_item);
+        busListView.setAdapter(adapter);
 
     }
 
