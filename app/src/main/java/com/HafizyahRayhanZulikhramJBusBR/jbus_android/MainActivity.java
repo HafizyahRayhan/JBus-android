@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         busListView.setAdapter(adapter);
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

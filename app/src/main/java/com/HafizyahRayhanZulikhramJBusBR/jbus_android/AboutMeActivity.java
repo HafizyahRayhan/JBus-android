@@ -1,24 +1,101 @@
 package com.HafizyahRayhanZulikhramJBusBR.jbus_android;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.HafizyahRayhanZulikhramJBusBR.jbus_android.model.Account;
+import com.HafizyahRayhanZulikhramJBusBR.jbus_android.model.BaseResponse;
+import com.HafizyahRayhanZulikhramJBusBR.jbus_android.request.BaseApiService;
+import com.HafizyahRayhanZulikhramJBusBR.jbus_android.request.UtilsApi;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AboutMeActivity extends AppCompatActivity {
-    private TextView usernameTextView;
-    private TextView emailTextView;
-    private TextView balanceTextView;
+    private Button topupButton = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_me);
-        usernameTextView = findViewById(R.id.username);
-        emailTextView = findViewById(R.id.email);
-        balanceTextView = findViewById(R.id.balance);
 
-        usernameTextView.setText("Hafizyah Rayhan");
-        emailTextView.setText("hafizyah@ui.ac.id");
-        balanceTextView.setText("$1000");
+        if (LoginActivity.loggedAccount == null) {
+            finish();
+            Toast.makeText(this, "Anda belum login", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        TextView usernameTextView = findViewById(R.id.username);
+        TextView emailTextView = findViewById(R.id.email);
+        TextView balanceTextView = findViewById(R.id.balance);
+        Account loggedAccount = LoginActivity.loggedAccount;
+        usernameTextView.setText(loggedAccount.name);
+        emailTextView.setText(loggedAccount.email);
+        balanceTextView.setText(String.valueOf(loggedAccount.balance));
+        TextView initialTextView = findViewById(R.id.textInitials);
+        if (loggedAccount.name.length() > 0) {
+            initialTextView.setText(String.valueOf(loggedAccount.name.charAt(0)).toUpperCase());
+        }
+
+        topupButton = findViewById(R.id.btnTopUp);
+        topupButton.setOnClickListener(v -> handleTopup(v));
+
     }
+    public void handleTopup(View view) {
+        // Get the amount from the EditText
+        EditText amountEditText = findViewById(R.id.editTopUpAmount);
+        String amountStr = amountEditText.getText().toString();
+
+        if (amountStr.isEmpty()) {
+            Toast.makeText(this, "Amount cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double amount = Double.parseDouble(amountStr);
+
+        if (amount <= 0) {
+            Toast.makeText(this, "Topup amount must be greater than 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Account loggedAccount = LoginActivity.loggedAccount;
+        double newBalance = loggedAccount.balance + amount;
+        BaseApiService mApiService = UtilsApi.getApiService();
+        int id = loggedAccount.id;
+
+        mApiService.topUp(id, amount).enqueue(new Callback<BaseResponse<Double>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<Double>> call, Response<BaseResponse<Double>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(AboutMeActivity.this, "Application error " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                BaseResponse<Double> res = response.body();
+
+                if (res.success) {
+                    // Update the balance in the TextView
+                    TextView balanceTextView = findViewById(R.id.balance);
+                    loggedAccount.balance = newBalance;
+                    balanceTextView.setText(String.valueOf(loggedAccount.balance));
+
+                    Toast.makeText(AboutMeActivity.this, "Topup Succesful", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AboutMeActivity.this, res.message, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<Double>> call, Throwable t) {
+                Toast.makeText(AboutMeActivity.this, "Problem with the server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
+
 }
