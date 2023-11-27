@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/gradation"
     android:gravity="center"
     android:orientation="vertical"
-    tools:actionBarNavMode="standard"
-    tools:context=".LoginActivity">
+    tools:context=".MainActivity">
 
   <LinearLayout
-      android:layout_width="320dp"
-      android:layout_height="450dp"
+      android:layout_width="334dp"
+      android:layout_height="493dp"
       android:layout_margin="24dp"
       android:background="#B3FFFFFF"
       android:gravity="center"
       android:orientation="vertical"
       android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="HOLA"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        android:textStyle="bold" />
-
     <ListView
         android:id="@+id/list_item"
         android:layout_width="match_parent"
-        android:layout_height="400dp"/>
+        android:layout_height="match_parent" />
 
   </LinearLayout>
+
   <LinearLayout
       android:id="@+id/pagination_footer"
       android:layout_width="match_parent"
@@ -42,39 +33,37 @@
       android:orientation="horizontal"
       android:paddingHorizontal="21dp">
 
-    <LinearLayout
-        android:id="@+id/btn_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/prev_page"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#514b4b"
+        android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
+        android:contentDescription="Previous Page Button" />
 
-      <HorizontalScrollView
-          android:id="@+id/page_number_scroll"
+    <HorizontalScrollView
+        android:id="@+id/page_number_scroll"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_weight="25"
+        android:paddingHorizontal="18dp"
+        tools:ignore="SpeakableTextPresentCheck">
+
+    <LinearLayout
+          android:id="@+id/btn_layout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_weight="25"
-          android:paddingHorizontal="18dp"
-          tools:ignore="SpeakableTextPresentCheck">
+          android:orientation="horizontal"/>
 
-        <Button
-            android:id="@+id/prev_page"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="49"
-            android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
-            android:text="Bus" />
-      </HorizontalScrollView>
-    </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/next_page"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#514b4b"
+        android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
+        android:contentDescription="Next Page Button" />
   </LinearLayout>
 
-  <Button
-      android:id="@+id/next_page"
-      android:layout_width="56dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:drawableLeft="@drawable/baseline_arrow_forward_ios_24"
-      android:minHeight="0dp"
-      android:text="Bus" />
 </LinearLayout>
-
-

@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/gradation"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ManageBusActivity">
+
+    <LinearLayout
+        android:layout_width="334dp"
+        android:layout_height="493dp"
+        android:layout_margin="24dp"
+        android:background="#B3FFFFFF"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ListView
+            android:id="@+id/list_bus_items"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pagination_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="21dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="21dp">
+
+        <Button
+            android:id="@+id/btn_prev_page"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#514b4b"
+            android:drawableLeft="@drawable/baseline_arrow_back_ios_24"
+            android:contentDescription="Previous Page Button" />
+
+        <HorizontalScrollView
+            android:id="@+id/page_number_scroll"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="25"
+            android:paddingHorizontal="18dp"
+            tools:ignore="SpeakableTextPresentCheck">
+
+            <LinearLayout
+                android:id="@+id/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"/>
+
+        </HorizontalScrollView>
+
+        <Button
+            android:id="@+id/btn_next_page"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#514b4b"
+            android:drawableRight="@drawable/baseline_arrow_forward_ios_24"
+            android:contentDescription="Next Page Button" />
+    </LinearLayout>
+
+</LinearLayout>

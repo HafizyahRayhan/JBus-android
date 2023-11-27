@@ -2,6 +2,7 @@ package com.HafizyahRayhanZulikhramJBusBR.jbus_android;
 
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -23,12 +24,12 @@ import com.HafizyahRayhanZulikhramJBusBR.jbus_android.model.BusArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity {
 
+    ListView Listbus;
     private Button[] btns;
     private int currentPage = 0;
-    private int pageSize = 12;
+    private final int pageSize = 6;
     private int listSize;
     private int noOfPages;
     private List<Bus> listBus = new ArrayList<>();
@@ -42,14 +43,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listBus = Bus.sampleBusList(20);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Manage Bus");
+        }
+        prevButton = findViewById(R.id.prev_page);
+        nextButton = findViewById(R.id.next_page);
+        pageScroll = findViewById(R.id.page_number_scroll);
+        busListView = findViewById(R.id.list_item);
+
+        Listbus = findViewById(R.id.list_item);
+        busArrayAdapter = new BusArrayAdapter(this, (ArrayList<Bus>) listBus);
+        Listbus.setAdapter(busArrayAdapter);
+
+        // membuat sample list
+        listBus = Bus.sampleBusList(30);
         listSize = listBus.size();
 
-        BusArrayAdapter adapter = new BusArrayAdapter(this, listBus);
-        ListView busListView = findViewById(R.id.list_item);
-        busListView.setAdapter(adapter);
+        // construct the footer
+        paginationFooter();
+        goToPage(currentPage);
 
+        // listener untuk button prev dan button
+        prevButton.setOnClickListener(v -> {
+            currentPage = currentPage != 0 ? currentPage - 1 : 0;
+            goToPage(currentPage);
+        });
+
+        nextButton.setOnClickListener(v -> {
+            currentPage = currentPage != noOfPages - 1 ? currentPage + 1 : currentPage;
+            goToPage(currentPage);
+        });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -85,9 +111,8 @@ public class MainActivity extends AppCompatActivity {
             btns[i].setBackgroundColor(getResources().getColor(android.R.color.transparent));
             btns[i].setText("" + (i + 1));
             // ganti dengan warna yang kalian mau
-            btns[i].setTextColor(getResources().getColor(R.color.black));
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(100,
-                    100);
+            btns[i].setTextColor(getResources().getColor(R.color.white));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(100, 100);
             ll.addView(btns[i], lp);
             final int j = i;
             btns[j].setOnClickListener(v -> {
@@ -96,9 +121,14 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+    private void scrollToItem(Button item) {
+        int scrollX = item.getLeft() - (pageScroll.getWidth() - item.getWidth()) / 2;
+        pageScroll.smoothScrollTo(scrollX, 0);
+    }
     private void goToPage(int index) {
         for (int i = 0; i< noOfPages; i++) {
             if (i == index) {
+                btns[index].setBackgroundDrawable(getResources().getDrawable(R.drawable.circle_background));
                 btns[i].setTextColor(getResources().getColor(android.R.color.white));
                 scrollToItem(btns[index]);
                 viewPaginatedList(listBus, currentPage);
@@ -108,20 +138,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    private void scrollToItem(Button item) {
-        int scrollX = item.getLeft() - (pageScroll.getWidth() - item.getWidth()) / 2;
-        pageScroll.smoothScrollTo(scrollX, 0);
-    }
-
     private void viewPaginatedList(List<Bus> listBus, int page) {
         int startIndex = page * pageSize;
         int endIndex = Math.min(startIndex + pageSize, listBus.size());
         List<Bus> paginatedList = listBus.subList(startIndex, endIndex);
-
+        BusArrayAdapter adapter = (BusArrayAdapter) busListView.getAdapter();
+        adapter.clear();
+        adapter.addAll(paginatedList);
+        adapter.notifyDataSetChanged();
     }
-
-
-
-
-
 }
+
