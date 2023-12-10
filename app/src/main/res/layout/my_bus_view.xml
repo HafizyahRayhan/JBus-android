@@ -18,13 +18,13 @@
         android:textStyle="bold"
         tools:ignore="RtlHardcoded" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/schedule_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center_vertical"
-        android:onClick="onLogoClick"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="3dp"
         android:src="@drawable/baseline_calendar_24"
-        android:contentDescription="Tombol Jadwal" />
+        />
 
 </LinearLayout>

@@ -29,8 +29,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-
-        // Load the components to the variables
         registerNow = findViewById(R.id.register_now);
         loginButton = findViewById(R.id.login_button);
 

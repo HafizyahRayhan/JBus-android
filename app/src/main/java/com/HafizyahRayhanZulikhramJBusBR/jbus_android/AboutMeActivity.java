@@ -5,6 +5,8 @@ import com.HafizyahRayhanZulikhramJBusBR.jbus_android.model.BaseResponse;
 import com.HafizyahRayhanZulikhramJBusBR.jbus_android.request.BaseApiService;
 import com.HafizyahRayhanZulikhramJBusBR.jbus_android.request.UtilsApi;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,81 +14,109 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AboutMeActivity extends AppCompatActivity {
-    private Button topupButton;
-    private TextView isRenter;
-    private Button btnManageBus;
+    private Button topupButton = null;
+    private TextView renterButton = null;
+    private TextView renterStatus = null;
+    private Button renterButton2 = null;
+    private TextView renterStatus2 = null;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_me);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("My Account");
+        }
 
-        // Ambil referensi UI
+        if (LoginActivity.loggedAccount == null) {
+            finish();
+            Toast.makeText(this, "Anda belum login", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         TextView usernameTextView = findViewById(R.id.username);
         TextView emailTextView = findViewById(R.id.email);
         TextView balanceTextView = findViewById(R.id.balance);
-        TextView initialTextView = findViewById(R.id.textInitials);
-        isRenter = findViewById(R.id.tvRegisteredRenter);
-        btnManageBus = findViewById(R.id.btnManageBus);
 
-        // Ambil data akun dari LoginActivity.loggedAccount
+
         Account loggedAccount = LoginActivity.loggedAccount;
-
-        // Set data akun ke UI
         usernameTextView.setText(loggedAccount.name);
         emailTextView.setText(loggedAccount.email);
         balanceTextView.setText(String.valueOf(loggedAccount.balance));
 
+        TextView initialTextView = findViewById(R.id.textInitials);
         if (loggedAccount.name.length() > 0) {
             initialTextView.setText(String.valueOf(loggedAccount.name.charAt(0)).toUpperCase());
         }
-        if (loggedAccount.company != null) {
-            isRenter.setVisibility(View.VISIBLE);
-            btnManageBus.setVisibility(View.VISIBLE);
-        } else {
-            isRenter.setVisibility(View.GONE);
-            btnManageBus.setVisibility(View.GONE);
-            TextView notRenter = findViewById(R.id.tvNotRegisteredRenter);
-            notRenter.setVisibility(View.VISIBLE);
 
-            TextView registeredNow = findViewById(R.id.tvRegisteredNow);
-            registeredNow.setVisibility(View.VISIBLE);
-            registeredNow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent registerIntent = new Intent(AboutMeActivity.this, RegisterRenterActivity.class);
-                    startActivity(registerIntent);
-                    Toast.makeText(AboutMeActivity.this, "Register as a renter", Toast.LENGTH_SHORT).show();
-                }
-            });
+        topupButton = findViewById(R.id.btnTopUp);
+        topupButton.setOnClickListener(v -> handleTopup(v));
+
+        renterButton = findViewById(R.id.tvRegisteredNow);
+        renterStatus = findViewById(R.id.tvNotRegisteredRenter);
+        renterButton2 = findViewById(R.id.btnManageBus);
+        renterStatus2 = findViewById(R.id.tvRegisteredRenter);
+
+        if (LoginActivity.loggedAccount.company != null) {
+            renterButton2.setVisibility(View.VISIBLE);
+            renterStatus2.setVisibility(View.VISIBLE);
+            renterButton.setVisibility(View.GONE);
+            renterStatus.setVisibility(View.GONE);
+        } else {
+            renterButton2.setVisibility(View.GONE);
+            renterStatus2.setVisibility(View.GONE);
+            renterButton.setVisibility(View.VISIBLE);
+            renterStatus.setVisibility(View.VISIBLE);
         }
 
-        // Handle Top-Up Button
-        topupButton = findViewById(R.id.btnTopUp);
-        topupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleTopup(v);
-            }
+        renterButton.setOnClickListener(v -> {
+            moveActivity(this, RegisterRenterActivity.class);
+            viewToast(this, "Register company anda");
+        });
+        renterButton2.setOnClickListener(v -> {
+            moveActivity(this, ManageBusActivity.class);
+            viewToast(this, "Manage bus anda");
         });
 
-        // Handle Manage Bus Button
-        btnManageBus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AboutMeActivity.this, ManageBusActivity.class);
-                startActivity(intent);
-            }
-        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (LoginActivity.loggedAccount.company != null) {
+            renterButton2.setVisibility(View.VISIBLE);
+            renterStatus2.setVisibility(View.VISIBLE);
+            renterButton.setVisibility(View.GONE);
+            renterStatus.setVisibility(View.GONE);
+        } else {
+            renterButton2.setVisibility(View.GONE);
+            renterStatus2.setVisibility(View.GONE);
+            renterButton.setVisibility(View.VISIBLE);
+            renterStatus.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void moveActivity(Context ctx, Class<?> cls) {
+        Intent intent = new Intent(ctx, cls);
+        startActivity(intent);
+    }
+
+    private void viewToast(Context ctx, String message) {
+        Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
     }
 
     public void handleTopup(View view) {
+        // Get the amount from the EditText
         EditText amountEditText = findViewById(R.id.editTopUpAmount);
         String amountStr = amountEditText.getText().toString();
 
@@ -102,9 +132,13 @@ public class AboutMeActivity extends AppCompatActivity {
             return;
         }
 
+
         Account loggedAccount = LoginActivity.loggedAccount;
+
         double newBalance = loggedAccount.balance + amount;
+
         BaseApiService mApiService = UtilsApi.getApiService();
+
         int id = loggedAccount.id;
 
         mApiService.topUp(id, amount).enqueue(new Callback<BaseResponse<Double>>() {
@@ -118,11 +152,12 @@ public class AboutMeActivity extends AppCompatActivity {
                 BaseResponse<Double> res = response.body();
 
                 if (res.success) {
+                    // Update the balance in the TextView
                     TextView balanceTextView = findViewById(R.id.balance);
                     loggedAccount.balance = newBalance;
                     balanceTextView.setText(String.valueOf(loggedAccount.balance));
 
-                    Toast.makeText(AboutMeActivity.this, "Topup Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AboutMeActivity.this, "Topup berhasil", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(AboutMeActivity.this, res.message, Toast.LENGTH_SHORT).show();
                 }
@@ -134,4 +169,5 @@ public class AboutMeActivity extends AppCompatActivity {
             }
         });
     }
+
 }
